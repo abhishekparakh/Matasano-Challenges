@@ -50,9 +50,11 @@ def b64Convert(hexNum):
     return b64Out
 
 def main():
-    hexNum = 'abc123adf3'   #input('>>Provide a hex input: ')
+    hexNum = '28212d2c3a2b202e6933243728282d6528212d2c3a2b202e6933243728282d6528212d2c3a2b202e' \
+             '6933243728282d6528212d2c3a262e6539223724222b65242b2b2c3621262e6539223724222b'
+   #input('>>Provide a hex input: ')
     b64Out = b64Convert(hexNum)
-    #print('b64Out: ', b64Out)
+    print('b64Out: ', b64Out)
 
 
 if __name__ == "__main__":
