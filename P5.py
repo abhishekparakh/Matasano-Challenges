@@ -1,9 +1,14 @@
 #Implement repeating-key XOR
 import bitarray
 
-key = 'ICEE'    #Fixed
+key = 'ICE'    #Fixed
 
-text = 'abhishek parakh abhishek parakh abhishek parakh abhisek parakh abhishek parakh'
+text = "We didn't start the fire, " \
+    "It was always burning, " \
+    "Since the world's been turning, " \
+    "We didn't start the fire, " \
+    "No we didn't light it, " \
+    "But we tried to fight it, "
 
 l = len(text)
 
@@ -15,6 +20,6 @@ keyExpanded = key*(l//len(key)) + key[:l%len(key)]
 #then convert to hex using (hex()) and replace the 0x prefix
 encryptedOut = ''
 for a,b in zip(text,keyExpanded):
-    encryptedOut += hex(ord(a)^ord(b)).replace('0x','')
+    encryptedOut += chr(ord(a)^ord(b))
 
-print(encryptedOut)
+print((encryptedOut.encode()).hex())

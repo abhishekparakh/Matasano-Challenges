@@ -1,72 +1,83 @@
 #Breaking repeating-key XOR
 
 import base64
-import binascii
-
-englishLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', \
-                  'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', \
-                  'q', 'r', 's', 't', 'u', 'v', 'w', 'x', \
-                  'y', 'z']
+import math
 
 #returns the hamming weight of the XOR of two strings
 #this is called the hamming distance between the strings
 #also called the edit distance
-def hammingDistance(str1, str2):
+def hammingDistance(str1, str2):   #input must be bytes
     countHammingDist = 0   #initialize counter
     for a,b in zip(str1, str2):    #make tuples and XOR
-        countHammingDist += bin(ord(a)^ord(b)).count('1')  #count 1s
+        countHammingDist += bin(a^b).count('1')  #count 1s
     return countHammingDist
 
-def singleCharXORAnalysis(block):
-    blockKey = ''
-    for l in range(len(englishLetters)):
-        out = ''
-        for c in block:
-            out += chr(ord(c) ^ ord(englishLetters[l]))
-        out = out.lower()
-        blockKey = englishLetters[l]
-        print('key: ', englishLetters[l], ' :: ', out)  # out contains the decrypted string in ascii
-    return blockKey
+a = 'is this heaven '
+b = "no it’s iowa!!"
+print(hammingDistance(a.encode(),b.encode()))
 
-a = 'this is a test'
-b = 'wokka wokka!!!'
-print(hammingDistance(a,b))
+def findKey(text):
+    # Trying to break the cipher by counting characters
+    # Looking for most commonly occurring character (e) and then finding out what it is xored with to get the key
+    charFreq = dict()
+    for c in text:
+        if c not in charFreq:
+            charFreq[c] = 1
+        else:
+            charFreq[c] += 1
+    # Find the most commonly occurring character
+    currentHighest = -1
+    charHighest = ''
+    for t in charFreq:
+        if charFreq[t] > currentHighest:
+            currentHighest = charFreq[t]
+            charHighest = t
+    print(charHighest)
+    key = chr(charHighest ^ ord(' '))  # space is the most common character
+    return key
 
-f = open('6decoded.txt', 'r')
+def main():
+    f = open('6.txt', 'r')
 
-#read the file - it contains base64 text so convert to ascii as well
-ciphertext = 'KCEtLDorIC5pMyQ3KCgtZSghLSw6KyAuaTMkNygoLWUoIS0sOisgLmkzJDcoKC1lKCEtLDomLmU5IjckIitlJCsrLDYhJi5lOSI3JCIr'
-print(ciphertext)
-ciphertext = str(base64.b64decode(ciphertext))
-ciphertext = ciphertext[2:len(ciphertext)-1]   #remove b' from start and ' from end
-print(ciphertext)
+    #read the file - it contains base64 text so convert to ascii as well
+    ciphertext = f.read()
+    #ciphertext = 'dGhpcyBpcyBhIHRlc3R3b2trYSB3b2trYSEhIQ=='
+    ciphertext = base64.b64decode(ciphertext)
 
-#step 3 and 4
-distance = dict()    #start a list for distances
-#we are storing tuples in the list (distance, keysize)
-for KEYSIZE in range(2,15):
-    distance1 = hammingDistance(ciphertext[:KEYSIZE], ciphertext[KEYSIZE:KEYSIZE*2])/KEYSIZE
-    distance2 = hammingDistance(ciphertext[KEYSIZE*2:KEYSIZE*3], ciphertext[KEYSIZE*3:KEYSIZE*4])/KEYSIZE
-    distance[KEYSIZE] = (distance1+distance2)/2
-minDistance = min(distance)   #sort the list - it sorts based on first element of the tuple
-print(distance)
+    #step 3 and 4
+    distance = dict()    #start a list for distances
+    #we are storing tuples in the list (distance, keysize)
+    for KEYSIZE in range(2,40):
+        distTemp = 0
+        count = 0
+        chunks = [ciphertext[i:i+KEYSIZE] for i in range(0, len(ciphertext), KEYSIZE)]
+        print(len(chunks))
+        for i in range(len(chunks)-1):
+            distTemp += hammingDistance(chunks[i], chunks[i+1])/KEYSIZE
+        distance[KEYSIZE] = distTemp/len(chunks)
+    keySize = sorted(distance, key=distance.get)[0]   #get the first element from the sorted list
 
-'''
-keySize = minDistance[1]    #second element of the tuple
+    #Make groups of every keySize th item from the ciphertext
+    #And do single character xor analysis on it
+    key = ''
+    for i in range(keySize):
+        chunk = ciphertext[i::keySize]
+        key += findKey(chunk)
 
-#step 5
-ciphertextBlocks = []
-for t in range(0,len(ciphertext),keySize):
-    ciphertextBlocks.append(ciphertext[t:t+keySize])
+    print("They key is: ", key)
 
-#step 6
-block = ''
-encryptionKey = ''
-for i in range(keySize):
-    for t in range(len(ciphertextBlocks)):
-        block += ciphertextBlocks[t]
-        #step 7 (solve for the first block)
-        encryptionKey += singleCharXORAnalysis(block)
-'''
+    #Decrypt the ciphertext
+    keyBytes = key.encode()
+    #repeat the keyBytes. It ends up longer but that's okay zip will truncate it
+    keyBytesRepeat = keyBytes*math.ceil(len(ciphertext)/len(keyBytes))
+    decryptOut = ''
+    for a, b in zip(keyBytesRepeat, ciphertext):
+        decryptOut += chr(a^b)
 
+    print("Decrypted plaintext: ")
+    print(decryptOut)
+
+
+if __name__ == '__main__':
+    main()
 

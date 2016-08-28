@@ -18,7 +18,8 @@ englishLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', \
                   'y', 'z']
 
 hex = '1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736'
-h = binascii.unhexlify(hex).decode('ascii')
+h = binascii.unhexlify(hex).decode('ascii')   #h is of type string
+
 
 key = ''
 for l in range(len(englishLetters)):
