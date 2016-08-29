@@ -23,3 +23,4 @@ for ct in f:     #this reads a line at a time and puts it in ct
     print(lineNumber)
 
 f.close()
+

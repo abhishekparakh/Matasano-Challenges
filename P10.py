@@ -21,13 +21,13 @@ def aesECBMode(text, aesKey, flag):    #flag tells the function to enc or dec
         textOut = decryptor.update(ct) + decryptor.finalize()  # output is in bytes
         return textOut      #this returns bytes
     elif flag == 'e':     #encrypt: the incoming text can be in ascii (english stream)
-        msg = text
-        padded_data = padder(msg, 128)    #AES block size is fixed to 128 bits
+        padded_data = padder(text, 128)    #AES block size is fixed to 128 bits
         encryptor = cipher.encryptor()
-        ct = encryptor.update(msg.encode()) + encryptor.finalize()    #convert ascii to bytes using .encode()
+        ct = encryptor.update(padded_data) + encryptor.finalize()    #convert ascii to bytes using .encode()
         return ct          #returns bytes
     else:
         return 'Invalid Flag'
+
 
 def xorInputs(a, b):    #works for bytes and ints
     xorOut = ''
@@ -35,31 +35,38 @@ def xorInputs(a, b):    #works for bytes and ints
         xorOut += chr(s ^ t)   #^ works for bytes
     return xorOut      #returns a string
 
+
 def aesCBCMode(text, aesKey, IV, flag):      #this function calls ECB mode inside
-    ct = ''
-    padded_data = padder(text, 128)         #pad input to AES block length
-    #print(padded_data)
-    #print(len(padded_data))
     previousBlock = IV                      #first IV is all 0s
-    for i in range(0, len(text)//16, 16):   #16 byte blocks
-        currentBlock = text[i:i+16]         #take out 16 bytes
-        #print(currentBlock)
-        #print(previousBlock)
-        currentDecrypt = aesECBMode(currentBlock, aesKey, flag)   #decrypt 16 bytes
-        xoredBlock = xorInputs(currentDecrypt, previousBlock)    #xor with previous block
-        #print(xoredBlock)
-        ct += xoredBlock                    #the xored output is already a string
-        previousBlock = currentBlock        #store current block for next round of CBC
-    return ct
+    if flag == 'd':
+        pt = ''
+        for i in range(0, len(text), 16):   #16 byte blocks   (integer division, else you get a float)
+            currentBlock = text[i:i+16]         #take out 16 bytes
+            currentDecrypt = aesECBMode(currentBlock, aesKey, flag)   #decrypt 16 bytes
+            xoredBlock = xorInputs(currentDecrypt, previousBlock)    #xor with previous block
+            pt += xoredBlock                    #the xored output is already a string
+            previousBlock = currentBlock        #store current block for next round of CBC
+        return pt                               #returns a string
+    elif flag == 'e':
+        ct = b''                    #bytes because encryption will be in bytes
+        for i in range(0, len(text), 16):
+            currentBlock = text[i:i+16]
+            xoredBlock = xorInputs(currentBlock, previousBlock)  #gets a string
+            currentEncrypt = aesECBMode(xoredBlock.encode(), aesKey, flag)
+            ct += currentEncrypt
+            previousBlock = currentEncrypt
+        return ct                          #returns bytes
+    else:
+        return "Invalid Flag! It can be e for encryption or d for decryption only."
+
 
 def main():
     f = open('10.txt', 'r')       #open input file - assuming it is base64 encoded
     ct = f.read()                 #read the file
+    f.close()
     ct = base64.b64decode(ct)     #decode base64 - ct is now in bytes
-    #print(ct)
     aesKey = b'YELLOW SUBMARINE'     #input key in bytes
     IV = b'\x00'*16                  #IV in bytes
-    #print(type(IV))
     print(aesCBCMode(ct, aesKey, IV, 'd'))    #Call CBC mode with flag of d
 
 
