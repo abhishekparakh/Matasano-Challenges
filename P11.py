@@ -7,9 +7,9 @@ import random
 
 #Note: sometimes detection fails even though it is ECB
 #because there may be no repetitive blocks in the plaintext
-def AESDetectionOracle(data):    #data is in bytes
+def AESDetectionOracle(dataInBytes):    #data is in bytes
     flag = False
-    chunks = [data[i:i+16] for i in range(0, len(data), 16)]
+    chunks = [dataInBytes[i:i + 16] for i in range(0, len(dataInBytes), 16)]
     for i in range(len(chunks)):
         count = chunks.count(chunks[i])   #count repetition of chunks
         if count>=2:
