@@ -14,7 +14,7 @@ def checkPaddingValidity(text):
     return 'Valid Pad!'
 
 def main():
-    text = "ICE ICE BABY\x01\x02\x03\x04"   #input string
+    text = "ICE ICE BABY\x04\x04\x04\x04"   #input string
     print(checkPaddingValidity(text))
 
 

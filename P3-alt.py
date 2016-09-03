@@ -4,7 +4,7 @@ import binascii
 import sys
 from bitstring import BitArray
 
-#using only the two few characters to check for requencies
+#using only the two few characters to check for frequencies
 vowels = ['e', 't', 'a', 'o', 'i', 'u']
 
 englishLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', \

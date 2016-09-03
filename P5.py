@@ -8,7 +8,10 @@ text = "We didn't start the fire, " \
     "Since the world's been turning, " \
     "We didn't start the fire, " \
     "No we didn't light it, " \
-    "But we tried to fight it, "
+    "But we tried to fight it"
+
+#f = open('5pt.txt', 'r')
+#text = f.read()
 
 l = len(text)
 

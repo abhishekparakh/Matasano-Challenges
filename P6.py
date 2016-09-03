@@ -12,8 +12,8 @@ def hammingDistance(str1, str2):   #input must be bytes
         countHammingDist += bin(a^b).count('1')  #count 1s
     return countHammingDist
 
-a = 'is this heaven '
-b = "no it’s iowa!!"
+a = "is this heaven"
+b = "no it's iowa!!"
 print(hammingDistance(a.encode(),b.encode()))
 
 def findKey(text):
@@ -32,12 +32,12 @@ def findKey(text):
         if charFreq[t] > currentHighest:
             currentHighest = charFreq[t]
             charHighest = t
-    print(charHighest)
+    #print(charHighest)
     key = chr(charHighest ^ ord(' '))  # space is the most common character
     return key
 
 def main():
-    f = open('6.txt', 'r')
+    f = open('w2p2.txt', 'r')
 
     #read the file - it contains base64 text so convert to ascii as well
     ciphertext = f.read()
@@ -51,7 +51,7 @@ def main():
         distTemp = 0
         count = 0
         chunks = [ciphertext[i:i+KEYSIZE] for i in range(0, len(ciphertext), KEYSIZE)]
-        print(len(chunks))
+        #print(len(chunks))
         for i in range(len(chunks)-1):
             distTemp += hammingDistance(chunks[i], chunks[i+1])/KEYSIZE
         distance[KEYSIZE] = distTemp/len(chunks)

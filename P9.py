@@ -3,11 +3,23 @@
 
 from cryptography.hazmat.primitives import padding
 
-blockSizeInBits = 160
 
-text = 'This is a Saturday'
+def padderPKCS7(inputText, blockSizeInBits):    #inputText is ASCII
+    padder = padding.PKCS7(blockSizeInBits).padder()
+    padded_data = padder.update(inputText.encode()) + padder.finalize()
+    return padded_data      #returns bytes
 
-padder = padding.PKCS7(blockSizeInBits).padder()
-padded_data = padder.update(text.encode()) + padder.finalize()
 
-print(padded_data)
+def unpadderPKCS7(inputTextInBytes, blockSizeInBits):     #inputText in bytes
+    unpadder = padding.PKCS7(blockSizeInBits).unpadder()
+    unpadded_data = unpadder.update(inputTextInBytes) + unpadder.finalize()
+
+
+def main():
+    blockSizeInBits = 160
+    text = 'This is a Saturday'
+    print(padderPKCS7(text, blockSizeInBits))
+
+
+if __name__ == "__main__":
+    main()

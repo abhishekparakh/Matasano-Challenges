@@ -7,7 +7,7 @@ import random
 
 #Note: sometimes detection fails even though it is ECB
 #because there may be no repetitive blocks in the plaintext
-def AESDetectionOracle(dataInBytes):    #data is in bytes
+def AES_ECBDetectionOracle(dataInBytes):    #data is in bytes
     flag = False
     chunks = [dataInBytes[i:i + 16] for i in range(0, len(dataInBytes), 16)]
     for i in range(len(chunks)):
@@ -68,7 +68,7 @@ def main():
     #Encrypt data 1/2 the time with ECB and other 1/2 the time with CBC
     out = encryptionOracle(inputWithRandomDataAdded)
 
-    ECBFound = AESDetectionOracle(out)
+    ECBFound = AES_ECBDetectionOracle(out)
     print("ECBDetected: ", ECBFound)
 
 

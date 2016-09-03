@@ -14,6 +14,7 @@ b64list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', \
            'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', \
            '9', '+', '/', '=']
 
+
 def b2dec(string):
     # We will get 6-bit strings that need to be converted
     num = 0
@@ -22,6 +23,7 @@ def b2dec(string):
         num = num+int(string[i])*(2**k)
         k += 1
     return num
+
 
 def b64Convert(hexNum):
     # Pad with 0s if the length is not a multiple of 6 hex characters
@@ -48,6 +50,7 @@ def b64Convert(hexNum):
         b64Out = b64Out[:-2] + '=='
 
     return b64Out
+
 
 def main():
     hexNum = '28212d2c3a2b202e6933243728282d6528212d2c3a2b202e6933243728282d6528212d2c3a2b202e' \

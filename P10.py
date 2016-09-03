@@ -13,6 +13,8 @@ def padder(text, blockSizeInBits):     #padder just returns a text stream padded
 
 #This AES ECB mode function does both encryption and decryption
 def aesECBMode(text, aesKey, flag):    #flag tells the function to enc or dec
+    if type(text) == str:
+        text = text.encode()
     cipher = Cipher(algorithms.AES(aesKey), modes.ECB(), backend=default_backend())
 
     if flag == 'd':       #decrypt: the incoming text must be in bytes
@@ -20,10 +22,10 @@ def aesECBMode(text, aesKey, flag):    #flag tells the function to enc or dec
         decryptor = cipher.decryptor()
         textOut = decryptor.update(ct) + decryptor.finalize()  # output is in bytes
         return textOut      #this returns bytes
-    elif flag == 'e':     #encrypt: the incoming text can be in ascii (english stream)
-        padded_data = padder(text, 128)    #AES block size is fixed to 128 bits
+    elif flag == 'e':     #encrypt: the incoming text in bytes
+        text = padder(text, 128)    #AES block size is fixed to 128 bits
         encryptor = cipher.encryptor()
-        ct = encryptor.update(padded_data) + encryptor.finalize()    #convert ascii to bytes using .encode()
+        ct = encryptor.update(text) + encryptor.finalize()    #convert ascii to bytes using .encode()
         return ct          #returns bytes
     else:
         return 'Invalid Flag'
@@ -40,7 +42,7 @@ def aesCBCMode(text, aesKey, IV, flag):      #this function calls ECB mode insid
     previousBlock = IV                      #first IV is all 0s
     if flag == 'd':
         pt = ''
-        for i in range(0, len(text), 16):   #16 byte blocks   (integer division, else you get a float)
+        for i in range(0, len(text), 16):    #incoming text must be bytes
             currentBlock = text[i:i+16]         #take out 16 bytes
             currentDecrypt = aesECBMode(currentBlock, aesKey, flag)   #decrypt 16 bytes
             xoredBlock = xorInputs(currentDecrypt, previousBlock)    #xor with previous block
@@ -48,13 +50,10 @@ def aesCBCMode(text, aesKey, IV, flag):      #this function calls ECB mode insid
             previousBlock = currentBlock        #store current block for next round of CBC
         return pt                               #returns a string
     elif flag == 'e':
-        ct = b''                    #bytes because encryption will be in bytes
-        for i in range(0, len(text), 16):
-            currentBlock = text[i:i+16]
-            xoredBlock = xorInputs(currentBlock, previousBlock)  #gets a string
-            currentEncrypt = aesECBMode(xoredBlock.encode(), aesKey, flag)
-            ct += currentEncrypt
-            previousBlock = currentEncrypt
+        text_padded = padder(text, 128)
+        cipher = Cipher(algorithms.AES(aesKey), modes.CBC(IV), backend=default_backend())
+        encryptor = cipher.encryptor()
+        ct = encryptor.update(text_padded) + encryptor.finalize()  # convert ascii to bytes using .encode()
         return ct                          #returns bytes
     else:
         return "Invalid Flag! It can be e for encryption or d for decryption only."
@@ -67,6 +66,7 @@ def main():
     ct = base64.b64decode(ct)     #decode base64 - ct is now in bytes
     aesKey = b'YELLOW SUBMARINE'     #input key in bytes
     IV = b'\x00'*16                  #IV in bytes
+    ct = aesCBCMode('Yellow SubmarineYellow Submarin'.encode(), aesKey, IV, 'e')
     print(aesCBCMode(ct, aesKey, IV, 'd'))    #Call CBC mode with flag of d
 
 
