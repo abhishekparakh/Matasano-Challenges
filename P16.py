@@ -50,7 +50,7 @@ def function2Enc(encryptedTextInBytes):
 #XOR bytes and return bytes
 def xorBytes(aInBytes, bInBytes):     #encode() was increasing the output length for some reason!
     out = b''
-    for s,t in zip(a,b):
+    for s,t in zip(aInBytes,bInBytes):
         out += bytes([s^t])     #this converts ints to bytes
     return out
 

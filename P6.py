@@ -47,7 +47,7 @@ def main():
     #step 3 and 4
     distance = dict()    #start a list for distances
     #we are storing tuples in the list (distance, keysize)
-    for KEYSIZE in range(2,40):
+    for KEYSIZE in range(2,45):
         distTemp = 0
         count = 0
         chunks = [ciphertext[i:i+KEYSIZE] for i in range(0, len(ciphertext), KEYSIZE)]
