@@ -52,7 +52,7 @@ def xorBytes(aInBytes, bInBytes):     #encode() was increasing the output length
     out = b''
     for s,t in zip(aInBytes,bInBytes):
         out += bytes([s^t])     #this converts ints to bytes
-    return out
+    return out     #returns bytes
 
 
 #attack the ciphertext. XOR appropriate bytes into the ciphertext such that next block changes

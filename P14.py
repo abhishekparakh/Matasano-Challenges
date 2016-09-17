@@ -22,7 +22,7 @@ def AESECBOraclePrependAndAppend(data, offset):
     dataToPrepend = os.urandom(randomNoOfBytesToPrepend)    #add random 10-20 bytes before the data
     dataInBytes = dataToPrepend + data.encode() + base64.b64decode(unknownString)[offset:]  #append the random string before encrypting
     encOut = P10.aesECBMode(dataInBytes, key,'e')   #reusing functions from P10
-    return encOut          #returns bytes if encrypt (flag = e)
+    return encOut          #returns bytes if generateKeyStream (flag = e)
 
 
 #discover block size by looking at output size jump:

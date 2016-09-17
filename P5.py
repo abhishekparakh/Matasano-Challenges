@@ -1,14 +1,11 @@
 #Implement repeating-key XOR
 import bitarray
 
-key = 'ICE'    #Fixed
+key = "AnotherDayIsHere!!@#"    #Fixed
 
-text = "We didn't start the fire, " \
-    "It was always burning, " \
-    "Since the world's been turning, " \
-    "We didn't start the fire, " \
-    "No we didn't light it, " \
-    "But we tried to fight it"
+text = "Another day has almost come and gone, Can't imagine what else" \
+       "could go wrong, Sometimes I'd like to hide away somewhere and lock" \
+       "the door, A single battle lost but not the war ('cause)!!!"
 
 #f = open('5pt.txt', 'r')
 #text = f.read()

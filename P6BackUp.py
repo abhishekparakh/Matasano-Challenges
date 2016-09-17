@@ -3,7 +3,6 @@
 import base64
 import math
 from bitstring import BitArray
-import bitarray
 
 #returns the hamming weight of the XOR of two strings
 #this is called the hamming distance between the strings
@@ -64,24 +63,21 @@ def decrypt(ciphertextInBytes):
     print("The key is: ", key)
 
     #Decrypt the ciphertext
-    #keyBytes = key.encode()
+    keyBytes = key.encode()
     #repeat the keyBytes. It ends up longer but that's okay zip will truncate it
-    #keyBytesRepeat = keyBytes*len(ciphertextInBytes)
-    keyInBits = bitarray.bitarray()
-    keyInBits.fromstring(key*len(ciphertextInBytes))
-    #keyBytesRepeatBin = BitArray(hex=keyBytesRepeatHex).bin
+    keyBytesRepeat = keyBytes*len(ciphertextInBytes)
+    keyBytesRepeatHex = keyBytesRepeat.hex()
+    keyBytesRepeatBin = BitArray(hex=keyBytesRepeatHex).bin
 
     ciphertextInHex = ciphertextInBytes.hex()
     ciphertextInBin = BitArray(hex=ciphertextInHex).bin
 
-    decryptOut = '0b'
-    for a, b in zip(keyInBits, ciphertextInBin):
-        decryptOut += str(int(a)^int(b))
+    decryptOut = ''
 
-    decryptedBytes = BitArray(decryptOut).bytes
-    decryptedText = str(decryptedBytes, 'latin1')
+    for a, b in zip(keyBytesRepeat, ciphertextInBytes):
+        decryptOut += chr(a^b)
 
-    return decryptedText
+    return decryptOut
 
 
 def main():

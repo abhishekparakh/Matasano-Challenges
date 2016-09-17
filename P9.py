@@ -16,8 +16,8 @@ def unpadderPKCS7(inputTextInBytes, blockSizeInBits):     #inputText in bytes
 
 
 def main():
-    blockSizeInBits = 128
-    text = 'NO PAIN NO GAIN!'
+    blockSizeInBits = 160
+    text = 'this is a saturda'
     print(padderPKCS7(text, blockSizeInBits))
 
 

@@ -27,8 +27,8 @@ f2.write(str(textEnc, 'utf-8'))
 f2.close()
 
 
-#read the encrypted text, base64 decode it and then decrypt it
-f3 = open('7altEnc.txt', 'r')
+#read the encrypted text, base64 decode it and then encrypt_decrypt it
+f3 = open('w3p1.txt', 'r')
 ct = f3.read()
 f3.close()
 ct = base64.b64decode(ct)

@@ -8,7 +8,7 @@ pt = "secret"
 key = RSA.generate(2048)
 
 encryptor = PKCS1_OAEP.new(key)
-out = encryptor.encrypt(pt.encode())
+out = encryptor.generateKeyStream(pt.encode())
 
 decryptor = PKCS1_OAEP.new(key)
 dout = decryptor.decrypt(out)

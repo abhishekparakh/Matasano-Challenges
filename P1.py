@@ -53,8 +53,7 @@ def b64Convert(hexNum):
 
 
 def main():
-    hexNum = '28212d2c3a2b202e6933243728282d6528212d2c3a2b202e6933243728282d6528212d2c3a2b202e' \
-             '6933243728282d6528212d2c3a262e6539223724222b65242b2b2c3621262e6539223724222b'
+    hexNum = '0000000000000000000000000000'
    #input('>>Provide a hex input: ')
     b64Out = b64Convert(hexNum)
     print('b64Out: ', b64Out)
