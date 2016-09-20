@@ -69,12 +69,13 @@ class attacker:
 
 
 def main():
-    inputText = b'YELLOW SUBMARINEYELLOW SUBMARINEyellow submarine'
-    #unknownText = base64.b64decode(inputText)
+    #inputText = b'YELLOW SUBMARINEYELLOW SUBMARINEyellow submarine'
+    inputText = b"MDAwMDA0QnVybmluZyAnZW0sIGlmIHlvdSBhaW4ndCBxdWljayBhbmQgbmltYmxl"
+    unknownText = base64.b64decode(inputText)
 
 
     webapp = webAppCBC()
-    encData = webapp.encrypt(inputText)
+    encData = webapp.encrypt(unknownText)
 
     attack = attacker()
     attack.attackCBCCipher(webapp, encData, 2)    #attacking first block decrypts second block, so on
